@@ -242,7 +242,7 @@ jobs:
           **Workflow run**: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
           END
           )
-          id=$(curl -u bggRGjQaUbCoE:$GH_TOKEN $CURL_RETRIES -s -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/bggRGjQaUbCoE/mpv-winbuild-cmake/releases -d @- <<END | jq -r '.id'
+          id=$(curl -u fhscey:$GH_TOKEN $CURL_RETRIES -s -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/fhscey/mpv-winbuild-cmake/releases -d @- <<END | jq -r '.id'
           {
             "tag_name": "$short_date",
             "name": "$short_date",
@@ -250,4 +250,4 @@ jobs:
           }
           END
           )
-          for file in release/*.7z; do curl -u bggRGjQaUbCoE:$GH_TOKEN $CURL_RETRIES -X POST -H "Accept: application/vnd.github.v3+json" -H "Content-Type: $(file -b --mime-type $file)" https://uploads.github.com/repos/bggRGjQaUbCoE/mpv-winbuild-cmake/releases/$id/assets?name=$(basename $file) --data-binary @$file; done
+          for file in release/*.7z; do curl -u fhscey:$GH_TOKEN $CURL_RETRIES -X POST -H "Accept: application/vnd.github.v3+json" -H "Content-Type: $(file -b --mime-type $file)" https://uploads.github.com/repos/fhscey/mpv-winbuild-cmake/releases/$id/assets?name=$(basename $file) --data-binary @$file; done

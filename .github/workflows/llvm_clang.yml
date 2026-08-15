@@ -216,7 +216,7 @@ jobs:
     steps:
       - name: Run mpv_clang.yml
         run: |
-          curl -u bggRGjQaUbCoE:$GH_TOKEN -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/bggRGjQaUbCoE/mpv-winbuild-cmake/actions/workflows/mpv_clang.yml/dispatches -d @- <<EOF
+          curl -u fhscey:$GH_TOKEN -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/fhscey/mpv-winbuild-cmake/actions/workflows/mpv_clang.yml/dispatches -d @- <<EOF
           {
             "ref": "master",
             "inputs": {

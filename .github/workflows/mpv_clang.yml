@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        bit: [x86_64]
+        bit: [x86_64, aarch64]
     env:
       BIT: ${{ matrix.bit }}
     container:
@@ -229,7 +229,7 @@ jobs:
       - name: Moving archives
         run: |
           mkdir -p release
-          mv release_x86_64/* release
+          mv release_x86_64/* release_aarch64/* release
           du -ah release/*
 
       - name: Uploading packages to Github release

@@ -1,3 +1,23 @@
+if (${TARGET_CPU} STREQUAL "aarch64")
+    set(FFMPEG_ARCH_OPTS
+        --disable-dotprod
+        --disable-i8mm
+        --disable-sve
+        --disable-sve2
+        --disable-sme
+    )
+    set(FFMPEG_EXTRA_CFLAGS_LIST
+        --extra-cflags=-Wno-error=int-conversion
+        --extra-cflags=-march=armv8.2-a
+        --extra-cflags=-mtune=cortex-a75
+    )
+else()
+    set(FFMPEG_ARCH_OPTS "")
+    set(FFMPEG_EXTRA_CFLAGS_LIST
+        --extra-cflags=-Wno-error=int-conversion
+    )
+endif()
+
 ExternalProject_Add(ffmpeg
         DEPENDS
         amf-headers
@@ -91,6 +111,8 @@ ExternalProject_Add(ffmpeg
         --enable-hwaccels
         --enable-optimizations
         --enable-runtime-cpudetect
+
+		${FFMPEG_ARCH_OPTS}
 
         --enable-openssl
         --enable-libssh
@@ -302,7 +324,7 @@ ExternalProject_Add(ffmpeg
         
         ${ffmpeg_cuda}
         ${ffmpeg_lto}
-        --extra-cflags='-Wno-error=int-conversion'
+        ${FFMPEG_EXTRA_CFLAGS_LIST}
         "--extra-libs='${ffmpeg_extra_libs}'" # -lstdc++ / -lc++ needs by libjxl and shaderc
         BUILD_COMMAND ${MAKE}
         INSTALL_COMMAND ${MAKE} install

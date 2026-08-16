@@ -97,7 +97,13 @@ jobs:
 
       - name: Configuring CMake & Downloading source
         run: |
-          cmake -DTARGET_ARCH=${{ env.arch }}-w64-mingw32 -DCOMPILER_TOOLCHAIN=clang ${{ env.x86_64_v3_ARCH }} -DCMAKE_INSTALL_PREFIX=$PWD/clang_root -DMINGW_INSTALL_PREFIX=$PWD/build_$BIT/$BIT-w64-mingw32 -DSINGLE_SOURCE_LOCATION=$PWD/src_packages -DRUSTUP_LOCATION=$PWD/clang_root/install_rustup -DENABLE_CCACHE=ON -DCLANG_PACKAGES_LTO=ON -G Ninja --fresh -B build_$BIT -S $PWD
+          cmake -DTARGET_ARCH=${{ env.arch }}-w64-mingw32 -DCOMPILER_TOOLCHAIN=clang ${{ env.x86_64_v3_ARCH }} -DCMAKE_INSTALL_PREFIX=$PWD/clang_root -DMINGW_INSTALL_PREFIX=$PWD/build_$BIT/$BIT-w64-mingw32 -DSINGLE_SOURCE_LOCATION=$PWD/src_packages -DRUSTUP_LOCATION=$PWD/clang_root/install_rustup -DENABLE_CCACHE=ON -DCLANG_PACKAGES_LTO=ON -G Ninja --fresh -B build_$BIT -S $PWD \
+                    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                    -DCMAKE_C_FLAGS_RELWITHDEBINFO="-O2 -g -gcodeview" \
+                    -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g -gcodeview" \
+                    -DCMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO="-Wl,--pdb=" \
+                    -DCMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO="-Wl,--pdb=" \
+                    -DCMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO=""
           ninja -C build_$BIT download || true
 
       - name: Building mpv
@@ -108,6 +114,17 @@ jobs:
           ninja -C build_$BIT update
           $MPV_TARBALL && ninja -C build_$BIT mpv-release || ninja -C build_$BIT mpv
           $MPV_TARBALL && echo "mpv_ver=$(cat build_$BIT/packages/mpv-release-prefix/VERSION)" >> $GITHUB_OUTPUT || echo "mpv_ver=UNKNOWN" >> $GITHUB_OUTPUT
+      
+      - name: Collect and upload PDB files
+        run: |
+          mkdir -p pdb_artifacts
+          find build_$BIT -name "*.pdb" -exec cp {} pdb_artifacts/ \;
+
+      - name: Upload PDB files
+        uses: actions/upload-artifact@master
+        with:
+          name: mpv-${{ matrix.bit }}-pdb
+          path: pdb_artifacts
 
       - name: Packaging mpv
         run: |

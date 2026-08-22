@@ -59,5 +59,10 @@ elseif(TARGET_CPU STREQUAL "aarch64")
     set(openssl_target "mingwarm64")
     set(openssl_ec_opt "enable-ec_nistp_64_gcc_128")
     set(libvpx_target "arm64-win64-gcc")
-    set(mpv_gl "-Dgl=disabled -Degl-angle=disabled")
+    # Enable OpenGL/ANGLE on aarch64 so media_kit's hardware-accelerated
+    # rendering (MPV_RENDER_API_TYPE_OPENGL) initializes on Windows ARM64.
+    # Without this, mpv_render_context_create(OPENGL) fails and media_kit
+    # falls back to software rendering (which for large portrait video also
+    # used to hit an integer-division bug, fixed upstream in media_kit).
+    set(mpv_gl "-Dgl=enabled -Degl-angle=enabled")
 endif()

@@ -49,6 +49,7 @@ jobs:
             echo "x86_64_v3_ARCH=-DGCC_ARCH=x86-64-v3" >> $GITHUB_ENV
           elif [[ $BIT == "aarch64" ]]; then
             echo "arch=aarch64" >> $GITHUB_ENV
+            echo "aarch64_ARCH=-DGCC_ARCH=cortex-a75+nodotprod+noi8mm+nosve+nosve2+nosme" >> $GITHUB_ENV
           fi
 
       - name: Setup git config
@@ -61,6 +62,8 @@ jobs:
           git config --global --add safe.directory $PWD
 
       - uses: actions/checkout@main
+        with:
+          ref: d3d11_render
 
       - name: Installing Meson
         run: |
@@ -200,7 +203,7 @@ jobs:
             exit 0
           fi
           cache_key=${CACHE_ID##*-}
-          curl -u Predidit:$GH_TOKEN $CURL_RETRIES -s -o /dev/null -X DELETE -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/$GITHUB_REPOSITORY/actions/caches?key=$PREFIX-repository-$cache_key
+          curl -u fhscey:$GH_TOKEN $CURL_RETRIES -s -o /dev/null -X DELETE -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/$GITHUB_REPOSITORY/actions/caches?key=$PREFIX-repository-$cache_key
 
   release:
     name: Upload releases
@@ -267,7 +270,7 @@ jobs:
           **Workflow run**: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
           END
           )
-          release_response=$(jq -n --arg tag "$short_date" --arg name "$short_date" --arg body "$body" '{tag_name: $tag, name: $name, body: $body}' | curl -u "Predidit:$GH_TOKEN" $CURL_RETRIES --fail-with-body -sS -X POST -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" -d @-)
+          release_response=$(jq -n --arg tag "$short_date" --arg name "$short_date" --arg body "$body" '{tag_name: $tag, name: $name, body: $body}' | curl -u "fhscey:$GH_TOKEN" $CURL_RETRIES --fail-with-body -sS -X POST -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" -d @-)
           upload_url=$(jq -r '.upload_url | sub("\\{\\?name,label\\}$"; "")' <<< "$release_response")
           if [[ -z "$upload_url" || "$upload_url" == "null" ]]; then
             echo "Release response did not include upload_url:"
@@ -283,5 +286,5 @@ jobs:
           for file in "${artifacts[@]}"; do
             name=$(basename "$file")
             encoded_name=$(jq -rn --arg value "$name" '$value | @uri')
-            curl -u "Predidit:$GH_TOKEN" $CURL_RETRIES --fail-with-body -sS -X POST -H "Accept: application/vnd.github.v3+json" -H "Content-Type: $(file -b --mime-type "$file")" --data-binary @"$file" "$upload_url?name=$encoded_name" > /dev/null
+            curl -u "fhscey:$GH_TOKEN" $CURL_RETRIES --fail-with-body -sS -X POST -H "Accept: application/vnd.github.v3+json" -H "Content-Type: $(file -b --mime-type "$file")" --data-binary @"$file" "$upload_url?name=$encoded_name" > /dev/null
           done

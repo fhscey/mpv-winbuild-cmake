@@ -42,40 +42,40 @@ jobs:
         uses: actions/cache/restore@main
         with:
           path: clang_root
-          key: ${{ secrets.CACHE_VERSION }}-clang_root-${{ github.run_id }}
-          restore-keys: ${{ secrets.CACHE_VERSION }}-clang_root
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang_root-${{ github.run_id }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-d3d11_clang_root
 
       - name: Loading x86_64 toolchain
         id: x86_64_cache
         uses: actions/cache/restore@main
         with:
           path: build_x86_64
-          key: ${{ secrets.CACHE_VERSION }}-clang-x86_64_toolchain-${{ github.run_id }}
-          restore-keys: ${{ secrets.CACHE_VERSION }}-clang-x86_64_toolchain
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-x86_64_toolchain-${{ github.run_id }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-d3d11_clang-x86_64_toolchain
 
       - name: Loading x86_64_v3 toolchain
         id: x86_64_v3_cache
         uses: actions/cache/restore@main
         with:
           path: build_x86_64_v3
-          key: ${{ secrets.CACHE_VERSION }}-clang-x86_64_v3_toolchain-${{ github.run_id }}
-          restore-keys: ${{ secrets.CACHE_VERSION }}-clang-x86_64_v3_toolchain
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-x86_64_v3_toolchain-${{ github.run_id }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-d3d11_clang-x86_64_v3_toolchain
 
       - name: Loading i686 toolchain
         id: i686_cache
         uses: actions/cache/restore@main
         with:
           path: build_i686
-          key: ${{ secrets.CACHE_VERSION }}-clang-i686_toolchain-${{ github.run_id }}
-          restore-keys: ${{ secrets.CACHE_VERSION }}-clang-i686_toolchain
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-i686_toolchain-${{ github.run_id }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-d3d11_clang-i686_toolchain
 
       - name: Loading aarch64 toolchain
         id: aarch64_cache
         uses: actions/cache/restore@main
         with:
           path: build_aarch64
-          key: ${{ secrets.CACHE_VERSION }}-clang-aarch64_toolchain-${{ github.run_id }}
-          restore-keys: ${{ secrets.CACHE_VERSION }}-clang-aarch64_toolchain
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-aarch64_toolchain-${{ github.run_id }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-d3d11_clang-aarch64_toolchain
 
       - name: Loading repository cache
         id: repository_cache
@@ -83,8 +83,8 @@ jobs:
         uses: actions/cache/restore@main
         with:
           path: src_packages
-          key: ${{ secrets.CACHE_VERSION }}-repository-${{ github.run_id }}
-          restore-keys: ${{ secrets.CACHE_VERSION }}-repository
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_repository-${{ github.run_id }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-d3d11_repository
 
       - name: Running custom command
         if: ${{ github.event.inputs.command != '' }}
@@ -173,38 +173,38 @@ jobs:
         uses: actions/cache/save@main
         with:
           path: clang_root
-          key: ${{ secrets.CACHE_VERSION }}-clang_root-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang_root-${{ github.run_id }}
 
       - name: Saving x86_64 toolchain
         uses: actions/cache/save@main
         with:
           path: build_x86_64
-          key: ${{ secrets.CACHE_VERSION }}-clang-x86_64_toolchain-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-x86_64_toolchain-${{ github.run_id }}
 
       - name: Saving x86_64_v3 toolchain
         uses: actions/cache/save@main
         with:
           path: build_x86_64_v3
-          key: ${{ secrets.CACHE_VERSION }}-clang-x86_64_v3_toolchain-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-x86_64_v3_toolchain-${{ github.run_id }}
 
       - name: Saving i686 toolchain
         uses: actions/cache/save@main
         with:
           path: build_i686
-          key: ${{ secrets.CACHE_VERSION }}-clang-i686_toolchain-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-i686_toolchain-${{ github.run_id }}
 
       - name: Saving aarch64 toolchain
         uses: actions/cache/save@main
         with:
           path: build_aarch64
-          key: ${{ secrets.CACHE_VERSION }}-clang-aarch64_toolchain-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-aarch64_toolchain-${{ github.run_id }}
 
       - name: Saving repository cache
         if: false
         uses: actions/cache/save@main
         with:
           path: src_packages
-          key: ${{ secrets.CACHE_VERSION }}-repository-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_repository-${{ github.run_id }}
 
   call_workflow:
     name: Run mpv_clang

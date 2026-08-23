@@ -30,6 +30,8 @@ jobs:
           git config --global --add safe.directory $PWD
 
       - uses: actions/checkout@main
+        with:
+          ref: d3d11_render
 
       - name: Installing Meson
         run: |
@@ -217,7 +219,7 @@ jobs:
         run: |
           curl -u shinchiro:$GH_TOKEN -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/shinchiro/mpv-winbuild-cmake/actions/workflows/mpv_clang.yml/dispatches -d @- <<EOF
           {
-            "ref": "master",
+            "ref": "d3d11_render",
             "inputs": {
               "sourceforge": "false",
               "github_release": "false",

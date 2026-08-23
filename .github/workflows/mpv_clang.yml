@@ -77,27 +77,27 @@ jobs:
         with:
           path: |
             clang_root
-          key: ${{ secrets.CACHE_VERSION }}-clang_root-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang_root-${{ github.run_id }}
           restore-keys: |
-            ${{ secrets.CACHE_VERSION }}-clang_root
+            ${{ secrets.CACHE_VERSION }}-d3d11_clang_root
 
       - name: Loading repository cache
         id: load_repository_cache
         uses: actions/cache/restore@main
         with:
           path: src_packages
-          key: ${{ secrets.CACHE_VERSION }}-repository-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_repository-${{ github.run_id }}
           restore-keys: |
-            ${{ secrets.CACHE_VERSION }}-repository
+            ${{ secrets.CACHE_VERSION }}-d3d11_repository
 
       - name: Loading ${{ matrix.bit }} toolchain cache
         uses: actions/cache/restore@main
         with:
           path: |
             build_${{ matrix.bit }}
-          key: ${{ secrets.CACHE_VERSION }}-clang-${{ matrix.bit }}_toolchain-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_clang-${{ matrix.bit }}_toolchain-${{ github.run_id }}
           restore-keys: |
-            ${{ secrets.CACHE_VERSION }}-clang-${{ matrix.bit }}_toolchain
+            ${{ secrets.CACHE_VERSION }}-d3d11_clang-${{ matrix.bit }}_toolchain
 
       - name: Running custom command
         if: ${{ github.event.inputs.command != '' }}
@@ -182,13 +182,13 @@ jobs:
         if: ${{ success() && matrix.bit == 'x86_64' }}
         with:
           path: src_packages
-          key: ${{ secrets.CACHE_VERSION }}-repository-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_repository-${{ github.run_id }}
 
       - name: Saving release_${{ matrix.bit }} cache
         uses: actions/cache/save@main
         with:
           path: release_${{ matrix.bit }}
-          key: ${{ secrets.CACHE_VERSION }}-release_${{ matrix.bit }}-${{ github.run_id }}
+          key: ${{ secrets.CACHE_VERSION }}-d3d11_release_${{ matrix.bit }}-${{ github.run_id }}
 
       - name: Delete previous repository cache
         if: ${{ always() && matrix.bit == 'x86_64' }}
@@ -203,7 +203,7 @@ jobs:
             exit 0
           fi
           cache_key=${CACHE_ID##*-}
-          curl -u fhscey:$GH_TOKEN $CURL_RETRIES -s -o /dev/null -X DELETE -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/$GITHUB_REPOSITORY/actions/caches?key=$PREFIX-repository-$cache_key
+          curl -u fhscey:$GH_TOKEN $CURL_RETRIES -s -o /dev/null -X DELETE -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/$GITHUB_REPOSITORY/actions/caches?key=$PREFIX-d3d11_repository-$cache_key
 
   release:
     name: Upload releases
@@ -212,10 +212,10 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       CURL_RETRIES: "--connect-timeout 60 --retry 999 --retry-delay 5 --retry-all-errors"
-      release_i686_key: ${{ secrets.CACHE_VERSION }}-release_i686-${{ github.run_id }}
-      release_x86_64_key: ${{ secrets.CACHE_VERSION }}-release_x86_64-${{ github.run_id }}
-      release_x86_64_v3_key: ${{ secrets.CACHE_VERSION }}-release_x86_64_v3-${{ github.run_id }}
-      release_aarch64_key: ${{ secrets.CACHE_VERSION }}-release_aarch64-${{ github.run_id }}
+      release_i686_key: ${{ secrets.CACHE_VERSION }}-d3d11_release_i686-${{ github.run_id }}
+      release_x86_64_key: ${{ secrets.CACHE_VERSION }}-d3d11_release_x86_64-${{ github.run_id }}
+      release_x86_64_v3_key: ${{ secrets.CACHE_VERSION }}-d3d11_release_x86_64_v3-${{ github.run_id }}
+      release_aarch64_key: ${{ secrets.CACHE_VERSION }}-d3d11_release_aarch64-${{ github.run_id }}
     container:
       image: docker://alpine:latest
 
